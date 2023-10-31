@@ -11,3 +11,15 @@ date()
 ```
 The text continues here.
 
+- Some thoughts avout IODS course:
+"Cool"
+
+### Reflect on learning experiences
+
+We use existing R code examples or existing work for R exercise, this is real-wold programming and much more effecient. When I used R sometimes the command doesn't work because I forgot to motify variable type, it's really helpful for me to get more familiar with variable types in R, through practicing I could understand the clear identification of them.
+
+I really like the approach using **RMarkdown**, I used it to show my analysis scripts and results to my colleagues. Also from my preference, I like the way rmd present, we can scroll the rmd file to check the results instead of open `Plots` windows, it's really useful if we want to see the different of commands.
+
+
+**My GitHub repository:**
+*<https://github.com/xindhuan/IODS-project>*
