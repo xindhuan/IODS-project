@@ -1,4 +1,17 @@
-# Insert chapter 2 title here
+---
+title: "**Regression and model validation**"
+
+author: Xindi
+
+date: 10th Nov 2023
+
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock
+---
+
+# Regression and model validation analysis
 
 *Describe the work you have done this week and summarize your learning.*
 
@@ -8,6 +21,171 @@
 
 ```{r}
 date()
+
+# laod packages
+library(tidyverse)
+library(dplyr)
+library(GGally)
+library(ggplot2)
 ```
 
-Here we go again...
+## 1 | Load input data
+```{r, message=FALSE}
+# set working directory
+setwd("~/r/IODS/IODS-project/")
+
+# read the students2014 data
+learning2014 <- read_csv("data/learning2014.csv")
+
+# have a look of the structure of the dataset
+str(learning2014)
+```
+
+The dataset includes a mix of character and numerical data types. It contains information about participants, including gender, age and various measures related to learning attitudes and strategies. The "points" variable suggests some form of scoring or outcome measure.
+
+*Variables*:
+- gender: Categorical variable representing the gender of participants (e.g., "F" for female, "M" for male).
+- age: Numerical variable representing the age of participants.
+- attitude: Numerical variable representing a scaled version of the "Attitude" column.
+- deep: Numerical variable calculated as the mean of columns related to deep learning.
+- stra: Numerical variable calculated as the mean of columns related to strategic learning.
+- surf: Numerical variable calculated as the mean of columns related to surface learning.
+- points: Numerical variable representing some form of points, possibly related to participant performance or achievement.
+
+```{r}
+# have a look of the dimensions of the dataset
+dim(learning2014)
+```
+*Dimensions*
+- The dataset has 166 rows and 7 columns.
+
+## 2 | Graphical overview of the data and summaries of the variables
+
+```{r, message=FALSE}
+# Adjust the code: Add the argument `col` to the `pairs()` function, 
+pairs(learning2014[, -1])
+
+# Create a more advanced plot matrix with ggpairs()
+p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+# Draw the plot to see the changes
+print(p)
+
+```
+
+
+
+```{r}
+summary(learning2014_data)
+```
+Let's interpret the outputs and comment on the distributions and relationships base on results above:
+
+1. **Age:**
+   - Ranges from 17 to 55 years, with a mean age of 25.51.
+   - The interquartile range (IQR) is from 21 to 27 years.
+   - The distribution of ages appears positively skewed, as the mean is greater than the median.
+
+2. **Attitude, Deep, Stra, Surf:**
+   - Attitude ranges from 1.4 to 5, with a mean of 3.143.
+   - Deep learning scores range from 1.583 to 4.917, with a mean of 3.680.
+   - Strategic learning scores range from 1.25 to 5, with a mean of 3.121.
+   - Surface learning scores range from 1.583 to 4.333, with a mean of 2.787.
+   - All these variables have a relatively symmetric distribution, as the mean is close to the median.
+
+3. **Points:**
+   - Points range from 7 to 33, with a mean of 22.72.
+   - The interquartile range (IQR) is from 19 to 27.75.
+   - The distribution appears slightly positively skewed, as the mean is greater than the median.
+
+4. **Relationships:**
+- 'attitude' and 'ponints':
+   - There is a positive correlation between 'attitude' and 'ponints' with an extremely high level of statistical significance.
+   - There is a strong positive correlation between 'attitude' and 'points' for males.
+- 'attitude' and 'surf' (surface learning).: 
+   - The negative correlation indicates an inverse relationship between  'attitude' and 'surf' (surface learning).
+   - There is a moderate negative correlation between 'attitude' and 'surf' for males.
+- 'deep' and 'surf'
+   - The strong negative correlation indicates an inverse relationship between  'deep'(deep learning) and 'surf'.
+   - There is a stong negative correlation between 'deep' and 'surf' for males.
+ - 'stra' and 'surf'
+   - The negative correlation relationship between  'stra'(strategic learning) and 'surf' .
+  
+3 | Regression model
+```{r}
+model <- lm(points ~ age + attitude + deep, data = learning2014)
+summary(model)
+```
+**Coefficients**:
+- `Intercept)`: 15.60773 represents the estimated mean 'points' when 'age,' 'attitude,' and 'deep' are all zero.
+
+- `age`: The coefficient is -0.07716. However, with a p-value of 0.149, 'age' is not statistically significant. Therefore, we may consider removing it.
+
+- `attitude`: The coefficient is 3.59413. With a very low p-value (2.56e-09), 'attitude' is statistically significant.
+
+- `deep`: The coefficient is -0.60275. However, with a p-value of 0.423, 'deep' is not statistically significant. Therefore, we may consider removing it.
+
+**Model Fit**:
+- `R-squared`: The R-squared value is 0.2043, indicating that approximately 20.43% of the variance in 'points' is explained by the model.
+
+- `Adjusted R-squared`: The adjusted R-squared accounts for the number of predictors. It is 0.1896, suggesting a slightly lower value when adjusting for the number of predictors.
+
+Consider removing 'age' and 'deep' from the model since they are not statistically significant.
+```{r}
+model <- lm(points ~ attitude, data = learning2014)
+summary(model)
+```
+
+4 | Multiple regression model
+
+Chose `surf` is the target variable and both `attitude` and `deep` are the explanatory variables
+```{r}
+
+# create a regression model with multiple explanatory variables
+# 
+my_model2 <- lm(surf ~ attitude + deep, data = learning2014)
+
+# print out a summary of the model
+summary(my_model2)
+```
+
+**Coefficients**:
+- `Intercept`: is 4.19180. This represents the expected mean value of 'surf' when both 'attitude' and 'deep' are zero.
+  
+- `attitude`: is -0.10257. For each one-unit increase in 'attitude,' 'surf' is expected to decrease by approximately 0.10257 units, holding 'deep' constant.
+
+- `deep`: is -0.29413. For each one-unit increase in 'deep,' 'surf' is expected to decrease by approximately 0.29413 units, holding 'attitude' constant.
+
+**Significance**:
+- `Intercept` The p-value is very small (< 2e-16), indicating that the intercept is statistically significant.
+
+- `attitude` The p-value is 0.0566, which is slightly larger than the conventional significance level of 0.05. It suggests that 'attitude' may not be statistically significant, but it's close to the threshold.
+
+- `deep` The p-value is very small (4.75e-05), indicating that 'deep' is statistically significant.
+
+**Model Fit**:
+- `Residuals` suggesting that the model is unbiased.
+
+- `R-squared`: The value is 0.1246, indicating that approximately 12.46% of the variance in 'surf' is explained by the model. This suggests a relatively low explanatory power.
+
+- `Adjusted R-squared`: It is 0.1139, indicating that the model has limited improvement over a null model.
+
+- `F-statistic`: The F-statistic tests the overall significance of the model. With a p-value of 1.941e-05, the model is statistically significant.
+
+
+5 | Plots
+Using the linear model object `my_model2`
+```{r}
+# set up a 2x2 grid for the diagnostic plots
+par(mfrow = c(2, 2))
+
+# draw diagnostic plots using the plot() function.
+plot(my_model2, which = c(1, 2, 5))
+
+```
+
+- Residuals vs Fitted values (Plot 1): There is a increasing linear relationship between the fitted values and residuals.
+
+-  Normal QQ-plot (Plot 2):  The probability shows little
+evidence of a departure from linearity
+
+- Residuals vs Leverage (Plot 5):   Points are randomly scattered, and there are some points have high leverage. High leverage points may disproportionately influence the model.
