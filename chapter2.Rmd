@@ -35,7 +35,8 @@ library(ggplot2)
 setwd("~/r/IODS/IODS-project/")
 
 # read the students2014 data
-learning2014 <- read_csv("data/learning2014.csv")
+library(readr)
+learning2014 <- read_csv("~/r/IODS/IODS-project/data/learning2014.csv")
 
 # have a look of the structure of the dataset
 str(learning2014)
@@ -76,7 +77,7 @@ print(p)
 
 
 ```{r}
-summary(learning2014_data)
+summary(learning2014)
 ```
 Let's interpret the outputs and comment on the distributions and relationships base on results above:
 
@@ -98,7 +99,7 @@ Let's interpret the outputs and comment on the distributions and relationships b
    - The distribution appears slightly positively skewed, as the mean is greater than the median.
 
 4. **Relationships:**
-- 'attitude' and 'ponints':
+- 'attitude' and 'points':
    - There is a positive correlation between 'attitude' and 'ponints' with an extremely high level of statistical significance.
    - There is a strong positive correlation between 'attitude' and 'points' for males.
 - 'attitude' and 'surf' (surface learning).: 
