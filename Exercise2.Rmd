@@ -1,251 +1,651 @@
-<!DOCTYPE html>
+---
+title: "**Introduction to Open Data Science, Exercise Set 2**"
 
-<html  dir="ltr" lang="fi" xml:lang="fi">
-<head>
-    <title>Kirjaudu sivustoon | Helsingin yliopiston Moodle</title>
-    <link rel="shortcut icon" href="https://moodle.helsinki.fi/theme/image.php/boost/theme/1699427378/favicon" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="moodle, Kirjaudu sivustoon | Helsingin yliopiston Moodle" />
-<link rel="stylesheet" type="text/css" href="https://moodle.helsinki.fi/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.css" /><script id="firstthemesheet" type="text/css">/** Required in order to fix style inclusion problems in IE with YUI **/</script><link rel="stylesheet" type="text/css" href="https://moodle.helsinki.fi/theme/styles.php/boost/1699427378_1/all" />
-<script>
-//<![CDATA[
-var M = {}; M.yui = {};
-M.pageloadstarttime = new Date();
-M.cfg = {"wwwroot":"https:\/\/moodle.helsinki.fi","homeurl":{},"sesskey":"E3ai5hLovs","sessiontimeout":"14400","sessiontimeoutwarning":1200,"themerev":"1699427378","slasharguments":1,"theme":"boost","iconsystemmodule":"core\/icon_system_fontawesome","jsrev":"1699427378","admin":"admin","svgicons":true,"usertimezone":"Eurooppa\/Helsinki","courseId":1,"courseContextId":2,"contextid":1,"contextInstanceId":0,"langrev":1699427378,"templaterev":"1699427378"};var yui1ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.name)){me.type='css';me.path=me.path.replace(/\.js/,'.css');me.path=me.path.replace(/\/yui2-skin/,'/assets/skins/sam/yui2-skin')}};
-var yui2ConfigFn = function(me) {var parts=me.name.replace(/^moodle-/,'').split('-'),component=parts.shift(),module=parts[0],min='-min';if(/-(skin|core)$/.test(me.name)){parts.pop();me.type='css';min=''}
-if(module){var filename=parts.join('-');me.path=component+'/'+module+'/'+filename+min+'.'+me.type}else{me.path=component+'/'+component+'.'+me.type}};
-YUI_config = {"debug":false,"base":"https:\/\/moodle.helsinki.fi\/lib\/yuilib\/3.17.2\/","comboBase":"https:\/\/moodle.helsinki.fi\/theme\/yui_combo.php?","combine":true,"filter":null,"insertBefore":"firstthemesheet","groups":{"yui2":{"base":"https:\/\/moodle.helsinki.fi\/lib\/yuilib\/2in3\/2.9.0\/build\/","comboBase":"https:\/\/moodle.helsinki.fi\/theme\/yui_combo.php?","combine":true,"ext":false,"root":"2in3\/2.9.0\/build\/","patterns":{"yui2-":{"group":"yui2","configFn":yui1ConfigFn}}},"moodle":{"name":"moodle","base":"https:\/\/moodle.helsinki.fi\/theme\/yui_combo.php?m\/1699427378\/","combine":true,"comboBase":"https:\/\/moodle.helsinki.fi\/theme\/yui_combo.php?","ext":false,"root":"m\/1699427378\/","patterns":{"moodle-":{"group":"moodle","configFn":yui2ConfigFn}},"filter":null,"modules":{"moodle-core-actionmenu":{"requires":["base","event","node-event-simulate"]},"moodle-core-blocks":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification"]},"moodle-core-chooserdialogue":{"requires":["base","panel","moodle-core-notification"]},"moodle-core-dragdrop":{"requires":["base","node","io","dom","dd","event-key","event-focus","moodle-core-notification"]},"moodle-core-event":{"requires":["event-custom"]},"moodle-core-formchangechecker":{"requires":["base","event-focus","moodle-core-event"]},"moodle-core-handlebars":{"condition":{"trigger":"handlebars","when":"after"}},"moodle-core-languninstallconfirm":{"requires":["base","node","moodle-core-notification-confirm","moodle-core-notification-alert"]},"moodle-core-lockscroll":{"requires":["plugin","base-build"]},"moodle-core-maintenancemodetimer":{"requires":["base","node"]},"moodle-core-notification":{"requires":["moodle-core-notification-dialogue","moodle-core-notification-alert","moodle-core-notification-confirm","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-core-notification-dialogue":{"requires":["base","node","panel","escape","event-key","dd-plugin","moodle-core-widget-focusafterclose","moodle-core-lockscroll"]},"moodle-core-notification-alert":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-confirm":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-exception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-ajaxexception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-popuphelp":{"requires":["moodle-core-tooltip"]},"moodle-core-tooltip":{"requires":["base","node","io-base","moodle-core-notification-dialogue","json-parse","widget-position","widget-position-align","event-outside","cache-base"]},"moodle-core_availability-form":{"requires":["base","node","event","event-delegate","panel","moodle-core-notification-dialogue","json"]},"moodle-backup-backupselectall":{"requires":["node","event","node-event-simulate","anim"]},"moodle-backup-confirmcancel":{"requires":["node","node-event-simulate","moodle-core-notification-confirm"]},"moodle-course-categoryexpander":{"requires":["node","event-key"]},"moodle-course-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-course-coursebase","moodle-course-util"]},"moodle-course-management":{"requires":["base","node","io-base","moodle-core-notification-exception","json-parse","dd-constrain","dd-proxy","dd-drop","dd-delegate","node-event-delegate"]},"moodle-course-util":{"requires":["node"],"use":["moodle-course-util-base"],"submodules":{"moodle-course-util-base":{},"moodle-course-util-section":{"requires":["node","moodle-course-util-base"]},"moodle-course-util-cm":{"requires":["node","moodle-course-util-base"]}}},"moodle-form-dateselector":{"requires":["base","node","overlay","calendar"]},"moodle-form-passwordunmask":{"requires":[]},"moodle-form-shortforms":{"requires":["node","base","selector-css3","moodle-core-event"]},"moodle-question-chooser":{"requires":["moodle-core-chooserdialogue"]},"moodle-question-preview":{"requires":["base","dom","event-delegate","event-key","core_question_engine"]},"moodle-question-searchform":{"requires":["base","node"]},"moodle-availability_completion-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_date-form":{"requires":["base","node","event","io","moodle-core_availability-form"]},"moodle-availability_grade-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_group-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_grouping-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_profile-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-mod_assign-history":{"requires":["node","transition"]},"moodle-mod_attendance-groupfilter":{"requires":["base","node"]},"moodle-mod_quiz-autosave":{"requires":["base","node","event","event-valuechange","node-event-delegate","io-form"]},"moodle-mod_quiz-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-base","moodle-mod_quiz-util-page","moodle-mod_quiz-util-slot","moodle-course-util"]},"moodle-mod_quiz-modform":{"requires":["base","node","event"]},"moodle-mod_quiz-questionchooser":{"requires":["moodle-core-chooserdialogue","moodle-mod_quiz-util","querystring-parse"]},"moodle-mod_quiz-quizbase":{"requires":["base","node"]},"moodle-mod_quiz-toolboxes":{"requires":["base","node","event","event-key","io","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-slot","moodle-core-notification-ajaxexception"]},"moodle-mod_quiz-util":{"requires":["node","moodle-core-actionmenu"],"use":["moodle-mod_quiz-util-base"],"submodules":{"moodle-mod_quiz-util-base":{},"moodle-mod_quiz-util-slot":{"requires":["node","moodle-mod_quiz-util-base"]},"moodle-mod_quiz-util-page":{"requires":["node","moodle-mod_quiz-util-base"]}}},"moodle-message_airnotifier-toolboxes":{"requires":["base","node","io"]},"moodle-filter_glossary-autolinker":{"requires":["base","node","io-base","json-parse","event-delegate","overlay","moodle-core-event","moodle-core-notification-alert","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-filter_mathjaxloader-loader":{"requires":["moodle-core-event"]},"moodle-editor_atto-editor":{"requires":["node","transition","io","overlay","escape","event","event-simulate","event-custom","node-event-html5","node-event-simulate","yui-throttle","moodle-core-notification-dialogue","moodle-core-notification-confirm","moodle-editor_atto-rangy","handlebars","timers","querystring-stringify"]},"moodle-editor_atto-plugin":{"requires":["node","base","escape","event","event-outside","handlebars","event-custom","timers","moodle-editor_atto-menu"]},"moodle-editor_atto-menu":{"requires":["moodle-core-notification-dialogue","node","event","event-custom"]},"moodle-editor_atto-rangy":{"requires":[]},"moodle-report_eventlist-eventfilter":{"requires":["base","event","node","node-event-delegate","datatable","autocomplete","autocomplete-filters"]},"moodle-report_loglive-fetchlogs":{"requires":["base","event","node","io","node-event-delegate"]},"moodle-gradereport_history-userselector":{"requires":["escape","event-delegate","event-key","handlebars","io-base","json-parse","moodle-core-notification-dialogue"]},"moodle-qbank_editquestion-chooser":{"requires":["moodle-core-chooserdialogue"]},"moodle-tool_capability-search":{"requires":["base","node"]},"moodle-tool_lp-dragdrop-reorder":{"requires":["moodle-core-dragdrop"]},"moodle-tool_monitor-dropdown":{"requires":["base","event","node"]},"moodle-assignfeedback_editpdf-editor":{"requires":["base","event","node","io","graphics","json","event-move","event-resize","transition","querystring-stringify-simple","moodle-core-notification-dialog","moodle-core-notification-alert","moodle-core-notification-warning","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-atto_accessibilitychecker-button":{"requires":["color-base","moodle-editor_atto-plugin"]},"moodle-atto_accessibilityhelper-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_align-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_bold-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_charmap-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_clear-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_collapse-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_emojipicker-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_emoticon-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_equation-button":{"requires":["moodle-editor_atto-plugin","moodle-core-event","io","event-valuechange","tabview","array-extras"]},"moodle-atto_h5p-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_html-beautify":{},"moodle-atto_html-button":{"requires":["promise","moodle-editor_atto-plugin","moodle-atto_html-beautify","moodle-atto_html-codemirror","event-valuechange"]},"moodle-atto_html-codemirror":{"requires":["moodle-atto_html-codemirror-skin"]},"moodle-atto_image-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_indent-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_italic-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_link-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_managefiles-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_managefiles-usedfiles":{"requires":["node","escape"]},"moodle-atto_media-button":{"requires":["moodle-editor_atto-plugin","moodle-form-shortforms"]},"moodle-atto_noautolink-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_orderedlist-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_recordrtc-button":{"requires":["moodle-editor_atto-plugin","moodle-atto_recordrtc-recording"]},"moodle-atto_recordrtc-recording":{"requires":["moodle-atto_recordrtc-button"]},"moodle-atto_rtl-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_strike-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_subscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_superscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_table-button":{"requires":["moodle-editor_atto-plugin","moodle-editor_atto-menu","event","event-valuechange"]},"moodle-atto_title-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_underline-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_undo-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_unorderedlist-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_wordcount-button":{"requires":["moodle-editor_atto-plugin"]}}},"gallery":{"name":"gallery","base":"https:\/\/moodle.helsinki.fi\/lib\/yuilib\/gallery\/","combine":true,"comboBase":"https:\/\/moodle.helsinki.fi\/theme\/yui_combo.php?","ext":false,"root":"gallery\/1699427378\/","patterns":{"gallery-":{"group":"gallery"}}}},"modules":{"core_filepicker":{"name":"core_filepicker","fullpath":"https:\/\/moodle.helsinki.fi\/lib\/javascript.php\/1699427378\/repository\/filepicker.js","requires":["base","node","node-event-simulate","json","async-queue","io-base","io-upload-iframe","io-form","yui2-treeview","panel","cookie","datatable","datatable-sort","resize-plugin","dd-plugin","escape","moodle-core_filepicker","moodle-core-notification-dialogue"]},"core_comment":{"name":"core_comment","fullpath":"https:\/\/moodle.helsinki.fi\/lib\/javascript.php\/1699427378\/comment\/comment.js","requires":["base","io-base","node","json","yui2-animation","overlay","escape"]},"mathjax":{"name":"mathjax","fullpath":"https:\/\/cdn.jsdelivr.net\/npm\/mathjax@2.7.9\/MathJax.js?delayStartupUntil=configured"}}};
-M.yui.loader = {modules: {}};
+subtitle: "**Regression and model validation**"
 
-//]]>
-</script>
-
-<link media="all" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" type="text/css"><meta name="robots" content="noindex" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body  id="page-login-index" class="format-site  path-login dir-ltr lang-fi yui-skin-sam yui3-skin-sam moodle-helsinki-fi pagelayout-login course-1 context-1 notloggedin ">
-<div class="toast-wrapper mx-auto py-0 fixed-top" role="status" aria-live="polite"></div>
-
-<div id="page-wrapper">
-
-    <div>
-    <a class="sr-only sr-only-focusable" href="#maincontent">Siirry pääsisältöön</a>
-</div><script src="https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/polyfills/polyfill.js"></script>
-<script src="https://moodle.helsinki.fi/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.js"></script><script src="https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/javascript-static.js"></script>
-<script>
-//<![CDATA[
-document.body.className += ' jsenabled';
-//]]>
-</script>
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock
+    toc: true
+    toc_depth: 2
+    number_section: false
+---
 
 
+This set consists of a few numbered exercises.
+Go to each exercise in turn and do as follows:
 
-    <div id="page" class="container-fluid pt-5 mt-0">
-        <div id="page-content" class="row">
-            <div id="region-main-box" class="col-12">
-                <section id="region-main" class="col-12 h-100" aria-label="Sisältö">
-                <div class="login-wrapper">
-                    <div class="login-container">
-                    <div role="main"><span id="maincontent"></span><div class="loginform">
-        <div id="loginlogo" class="login-logo">
-            <img id="logoimage" src="https://moodle.helsinki.fi/pluginfile.php/1/core_admin/logo/0x200/1699427378/HY_logo_kolmikielinen_vaaka.png" class="img-fluid" alt="Helsingin yliopiston Moodle"/>
-            <h1 class="login-heading sr-only">Kirjaudu Helsingin yliopiston Moodle</h1>
-        </div>
-        <div class="mt-3">
-        <h2 class="h6 font-weight-bold">Kirjaudu Helsingin yliopiston tunnuksella</h2>
-        <a href="https://moodle.helsinki.fi/Shibboleth.sso/HYLogin?target=https://moodle.helsinki.fi/auth/shibboleth"><img src="login-hy-idp.gif" alt="Helsingin yliopisto -kirjautuminen" /></a><br />
-        <a href="https://helpdesk.it.helsinki.fi/kirjautuminen-ja-yhteydet/kayttajatunnus/kayttajatunnukset" title="Avautuu uudessa ikkunassa" target="_blank" rel="noreferrer noopener">Lisätietoa Helsingin yliopiston tunnuksista</a>
-        </div>
-        <div class="mt-3">
-        <h2 class="h6 font-weight-bold">Kirjaudu Haka-tunnuksella</h2>
-        <a href="https://moodle.helsinki.fi/Shibboleth.sso/HAKALogin?target=https://moodle.helsinki.fi/auth/shibboleth/"><img src="login-haka-wayf.gif" alt="Haka-kirjautuminen" /></a><br />
-        <a href="https://www.csc.fi/fi/haka-kayttajatunnistusjarjestelma" title="Avautuu uudessa ikkunassa" target="_blank" rel="noreferrer noopener">Lisätietoa Haka-käyttäjätunnistusjärjestelmästä</a>
-        </div>
-        <div class="mt-3">
-        <h2 class="h6 font-weight-bold">Kirjaudu eduGAIN-tunnuksella</h2>
-        <a href="https://moodle.helsinki.fi/login/login-edugain.html"><img src="login-edugain.gif" alt="eduGAIN-kirjautuminen" /></a><br />
-        <a href="https://edugain.org/" title="Avautuu uudessa ikkunassa" target="_blank" rel="noreferrer noopener">Lisätietoa eduGAIN-käyttäjätunnistusjärjestelmästä</a>
-        </div>
-        <a href="index.php?manualauth=1" tabindex="-1"><img src="https://moodle.helsinki.fi/theme/image.php/boost/core/1699427378/spacer" class="float-right" height="8" width="8" alt="Manuaalinen kirjautuminen" /></a>
-        <div class="login-divider"></div>
-        <h2 class="login-heading">Jotkut kurssit saattavat sallia pääsyn <a href="https://docs.moodle.org/fi/Vierailija">vierailijana</a></h2>
-        <form action="https://moodle.helsinki.fi/login/index.php" method="post" id="guestlogin">
-            <input type="hidden" name="logintoken" value="CvTBLfvEmqwECALhg4nb3Fod1SHjGWky">
-            <input type="hidden" name="username" value="guest" />
-            <input type="hidden" name="password" value="guest" />
-            <button class="btn btn-secondary" type="submit" id="loginguestbtn">Kirjaudu vierailijana</button>
-        </form>
-    <div class="login-divider"></div>
-    <div class="d-flex">
-            <div class="login-languagemenu">
-                <div class="action-menu moodle-actionmenu" id="action-menu-0" data-enhance="moodle-core-actionmenu">
-                
-                        <div class="menubar d-flex " id="action-menu-0-menubar">
-                
-                            
-                
-                
-                                <div class="action-menu-trigger">
-                                    <div class="dropdown">
-                                        <a
-                                            href="#"
-                                            tabindex="0"
-                                            class=" dropdown-toggle icon-no-margin"
-                                            id="action-menu-toggle-0"
-                                            aria-label="Suomi ‎(fi)‎"
-                                            data-toggle="dropdown"
-                                            role="button"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                            aria-controls="action-menu-0-menu"
-                                        >
-                                            
-                                            Suomi ‎(fi)‎
-                                                
-                                            <b class="caret"></b>
-                                        </a>
-                                            <div class="dropdown-menu menu dropdown-menu-right" id="action-menu-0-menu" data-rel="menu-content" aria-labelledby="action-menu-toggle-0" role="menu">
-                                                                                                <a href="https://moodle.helsinki.fi/login/index.php?lang=en" class="dropdown-item menu-action" data-lang="en" lang="en" role="menuitem" tabindex="-1" aria-labelledby="actionmenuaction-1">
-                                                <span class="menu-action-text" id="actionmenuaction-1">English ‎(en)‎</span>
-                                        </a>
-                                                                                                <a href="https://moodle.helsinki.fi/login/index.php?lang=sv_fi" class="dropdown-item menu-action" data-lang="sv_fi" lang="sv_fi" role="menuitem" tabindex="-1" aria-labelledby="actionmenuaction-2">
-                                                <span class="menu-action-text" id="actionmenuaction-2">Svenska (sv_fi)</span>
-                                        </a>
-                                                                                                <a href="#" class="dropdown-item menu-action" role="menuitem" tabindex="-1" aria-labelledby="actionmenuaction-3">
-                                                <span class="menu-action-text" id="actionmenuaction-3">Suomi ‎(fi)‎</span>
-                                        </a>
-                                            </div>
-                                    </div>
-                                </div>
-                
-                        </div>
-                
-                </div>
-            </div>
-            <div class="divider border-left align-self-center mx-3"></div>
-        <button type="button" class="btn btn-secondary"  data-modal="alert" data-modal-title-str='["cookiesenabled", "core"]'  data-modal-content-str='["cookiesenabled_help_html", "core"]'>Tietoa evästeistä</button>
-    </div>
-</div></div>
-                    </div>
-                </div>
-                </section>
-            </div>
-        </div>
-    </div>
-    
-    <footer id="page-footer" class="footer-popover bg-white">
-        <div data-region="footer-container-popover">
-            <button class="btn btn-icon bg-secondary icon-no-margin btn-footer-popover" data-action="footer-popover" aria-label="Show footer">
-                <i class="icon fa fa-question fa-fw " aria-hidden="true"  ></i>
-            </button>
-        </div>
-        <div class="footer-content-popover container" data-region="footer-content-popover">
-            <div class="footer-section p-3 border-bottom">
-                <div class="logininfo">
-                    <div class="logininfo">Et ole kirjautunut.</div>
-                </div>
-                <div class="tool_usertours-resettourcontainer">
-                </div>
-    
-                <a class="mobilelink" href="https://download.moodle.org/mobile?version=2022112806&amp;lang=fi&amp;iosappid=633359593&amp;androidappid=com.moodle.moodlemobile">Hanki mobiilisovellus</a>
-                
-<div class="text_to_html"><p></p><p>Moodle 4.1<br /><a href="https://www.helsinki.fi/fi">Helsingin yliopisto</a><br /><a href="https://moodle.helsinki.fi/rekisteriseloste.htm">Tietosuojaseloste</a>| <a href="https://moodle.helsinki.fi/saavutettavuusseloste.html">Saavutettavuusseloste</a></p></div><script>
-//<![CDATA[
-var require = {
-    baseUrl : 'https://moodle.helsinki.fi/lib/requirejs.php/1699427378/',
-    // We only support AMD modules with an explicit define() statement.
-    enforceDefine: true,
-    skipDataMain: true,
-    waitSeconds : 0,
+1. Read the brief description of the exercise.
+2. Run the (possible) pre-exercise-code chunk.
+3. Follow the instructions to fix the R code!
 
-    paths: {
-        jquery: 'https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/jquery/jquery-3.6.1.min',
-        jqueryui: 'https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/jquery/ui-1.13.2/jquery-ui.min',
-        jqueryprivate: 'https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/requirejs/jquery-private'
-    },
+## 2.0 INSTALL THE REQUIRED PACKAGES FIRST!
 
-    // Custom jquery config map.
-    map: {
-      // '*' means all modules will get 'jqueryprivate'
-      // for their 'jquery' dependency.
-      '*': { jquery: 'jqueryprivate' },
-      // Stub module for 'process'. This is a workaround for a bug in MathJax (see MDL-60458).
-      '*': { process: 'core/first' },
+One or more extra packages (in addition to `tidyverse`) will be needed below.
 
-      // 'jquery-private' wants the real jQuery module
-      // though. If this line was not here, there would
-      // be an unresolvable cyclic dependency.
-      jqueryprivate: { jquery: 'jquery' }
-    }
-};
+```{r}
+# Select (with mouse or arrow keys) the install.packages("...") and
+# run it (by Ctrl+Enter / Cmd+Enter):
+library(tidyverse)
+install.packages("GGally")
 
-//]]>
-</script>
-<script src="https://moodle.helsinki.fi/lib/javascript.php/1699427378/lib/requirejs/require.min.js"></script>
-<script>
-//<![CDATA[
-M.util.js_pending("core/first");
-require(['core/first'], function() {
-require(['core/prefetch'])
-;
-require(["media_videojs/loader"], function(loader) {
-    loader.setUp('fi');
-});;
+```
 
-require(['theme_boost/footer-popover'], function(FooterPopover) {
-    FooterPopover.init();
-});
-;
 
-M.util.js_pending('theme_boost/loader');
-require(['theme_boost/loader'], function() {
-  M.util.js_complete('theme_boost/loader');
-});
-;
+## 2.1 Reading data from the web
 
-    require(['core_form/submit'], function(Submit) {
-        Submit.init("loginbtn");
-            Submit.init("loginguestbtn");
-    });
-;
-M.util.js_pending('core/notification'); require(['core/notification'], function(amd) {amd.init(1, []); M.util.js_complete('core/notification');});;
-M.util.js_pending('core/log'); require(['core/log'], function(amd) {amd.setConfig({"level":"warn"}); M.util.js_complete('core/log');});;
-M.util.js_pending('core/page_global'); require(['core/page_global'], function(amd) {amd.init(); M.util.js_complete('core/page_global');});;
-M.util.js_pending('core/utility'); require(['core/utility'], function(amd) {M.util.js_complete('core/utility');});
-    M.util.js_complete("core/first");
-});
-//]]>
-</script>
-<script>
-//<![CDATA[
-M.str = {"moodle":{"lastmodified":"Viimeksi muutettu","name":"Nimi","error":"Virhe","info":"Tiedot","yes":"Kyll\u00e4","no":"Ei","ok":"OK","cancel":"Peruuta","confirm":"Vahvista","areyousure":"Oletko varma?","closebuttontitle":"Sulje","unknownerror":"Tuntematon virhe","file":"Tiedosto","url":"Verkko-osoite","collapseall":"Sulje kaikki","expandall":"N\u00e4yt\u00e4 kaikki"},"repository":{"type":"Tyyppi","size":"Koko","invalidjson":"Virheellinen JSON-merkkijono","nofilesattached":"Ei liitettyj\u00e4 tiedostoja","filepicker":"Tiedostonvalitsin","logout":"Kirjaudu ulos","nofilesavailable":"Ei saatavilla olevia tiedostoja","norepositoriesavailable":"Valitettavasti yksik\u00e4\u00e4n nykyisist\u00e4 tiedostopankeistasi ei voi palauttaa tiedostoja halutussa muodossa.","fileexistsdialogheader":"Tiedosto on olemassa","fileexistsdialog_editor":"Samanniminen tiedosto on jo liitetty tekstiin jota muokkaat.","fileexistsdialog_filemanager":"Samanniminen tiedosto on jo liitetty","renameto":"Uudelleennime\u00e4 \"{$a}\"","referencesexist":"T\u00e4t\u00e4 tiedostoa k\u00e4ytet\u00e4\u00e4n l\u00e4hteen\u00e4 {$a} tiedostoviitteess\u00e4","select":"Valitse"},"admin":{"confirmdeletecomments":"Haluatko varmasti poistaa kommentit?","confirmation":"Vahvistus"},"debug":{"debuginfo":"Virheenkorjaustiedot","line":"Rivi","stacktrace":"Pinon j\u00e4lki"},"langconfig":{"labelsep":":"}};
-//]]>
-</script>
-<script>
-//<![CDATA[
-(function() {Y.use("moodle-filter_glossary-autolinker",function() {M.filter_glossary.init_filter_autolinking({"courseid":0});
-});
-Y.use("moodle-filter_mathjaxloader-loader",function() {M.filter_mathjaxloader.configure({"mathjaxconfig":"MathJax.Hub.Config({\r\n    TeX: { extensions: [\"AMSmath.js\", \"AMSsymbols.js\", \"mhchem.js\", \"noErrors.js\", \"noUndefined.js\"] },\r\n    config: [\"Accessible.js\", \"Safe.js\"],\r\n    errorSettings: { message: [\"!\"] },\r\n    skipStartupTypeset: true,\r\n    messageStyle: \"none\"\r\n});","lang":"fi"});
-});
-M.util.help_popups.setup(Y);
- M.util.js_pending('random654de9414e9a95'); Y.on('domready', function() { M.util.js_complete("init");  M.util.js_complete('random654de9414e9a95'); });
-})();
-//]]>
-</script>
+The first step of data analysis with R is reading data into R. This is done with a function. Which function and function arguments to use to do this, depends on the original format of the data. 
 
-            </div>
-            <div class="footer-section p-3">
-                <div>Toimii <a href="https://moodle.com">Moodlella</a></div>
-            </div>
-        </div>
-    
-        <div class="footer-content-debugging footer-dark bg-dark text-light">
-            <div class="container-fluid footer-dark-inner">
-                
-            </div>
-        </div>
-    </footer>
-</div>
+Conveniently in R, the same functions for reading data can usually be used whether the data is saved locally on your computer or somewhere else behind a web URL.
 
-</body>
-</html>
+After the correct function has been identified and data read into R, the data will usually be in R `data.frame` format. Te dimensions of a data frame are ($n$,$d$), where $n$ is the number of rows (the observations) and $d$ the number of columns (the variables).
+
+**The purpose of this course is to expose you to some basic and more advanced tasks of programming and data analysis with R.**
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+# (No pre-exercise code in this exercise! Just go on!)
+
+```
+
+### Instructions
+- Read the `lrn14` data frame to memory with `read.table()`. There is information related to the data [here](http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt)
+- Use `dim()` on the data frame to look at the dimensions of the data. How many rows and colums does the data have?
+- Look at the structure of the data with `str()`.
+
+Hint:
+- For both functions you can pass a data frame as the first (unnamed) argument.
+
+### R code
+```{r}
+# This is a code chunk in RStudio editor.
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+
+# read the data into memory
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+
+# Look at the dimensions of the data
+dim(lrn14)
+
+# Look at the structure of the data
+str(lrn14)
+
+```
+
+
+## 2.2 Scaling variables
+
+The next step is [wrangling the data](https://en.wikipedia.org/wiki/Data_wrangling) into a format that is easy to analyze. We will wrangle our data for the next few exercises. 
+
+A neat thing about R is that may operations are *vectorized*. It means that a single operation can affect all elements of a vector. This is often convenient.
+
+The column `Attitude` in `lrn14` is a sum of 10 questions related to students attitude towards statistics, each measured on the [Likert scale](https://en.wikipedia.org/wiki/Likert_scale) (1-5). Here we'll scale the combination variable back to the 1-5 scale.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+# read the data into memory
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+```
+
+### Instructions
+- Execute the example codes to see how vectorized division works
+- Use vector division to create a new column `attitude` in the `lrn14` data frame, where each observation of `Attitude` is scaled back to the original scale of the questions, by dividing it with the number of questions.
+
+Hint:
+- Assign 'Attitude divided by 10' to the new column 'attitude.
+
+### R code
+```{r}
+# This is a code chunk in RStudio editor.
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+
+#lrn14 is available
+
+# divide each number in a vector
+c(1,2,3,4,5) / 2
+
+# print the "Attitude" column vector of the lrn14 data
+lrn14$Attitude
+
+# divide each number in the column vector
+lrn14$Attitude / 10
+
+# create column 'attitude' by scaling the column "Attitude"
+lrn14$attitude <- lrn14$Attitude / 10
+lrn14$attitude
+```
+
+
+## 2.3 Combining variables
+
+Our data includes many questions that can be thought to measure the same *dimension*. You can read more about the data and the variables [here](http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt). Here we'll combine multiple questions into combination variables. Useful functions for summation with data frames in R are
+
+function      | description
+------------- | ----------
+`colSums(df)` | returns a sum of each column in `df`
+`rowSums(df)` | returns a sum of each row in `df`
+`colMeans(df)`| returns the mean of each column in `df`
+`rowMeans(df)`| return the mean of each row in `df`
+
+We'll combine the use of `rowMeans()`with the `select()` function from the **dplyr** library to average the answers of selected questions. See how it is done from the example codes.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+# read the data into memory
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+lrn14$attitude <- lrn14$Attitude / 10
+```
+
+### Instructions
+- Access the **dplyr** library
+- Execute the example codes to create the combination variables 'deep' and 'surf' as columns in `lrn14`
+- Select the columns related to strategic learning from `lrn14`
+- Create the combination variable 'stra' as a column in `lrn14`
+
+Hints:
+- Columns related to strategic learning are in the object `strategic_questions`. Use it for selecting the correct columns.
+- Use the function `rowMeans()` identically to the examples
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# lrn14 is available
+
+# Access the dplyr library
+library(dplyr)
+
+# questions related to deep, surface and strategic learning
+deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
+strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
+
+# select the columns related to deep learning 
+deep_columns <- select(lrn14, one_of(deep_questions))
+# and create column 'deep' by averaging
+lrn14$deep <- rowMeans(deep_columns)
+
+# select the columns related to surface learning 
+surface_columns <- select(lrn14, one_of(surface_questions))
+# and create column 'surf' by averaging
+lrn14$surf <- rowMeans(surface_columns)
+
+# select the columns related to strategic learning 
+strategic_columns <- select(lrn14, one_of(strategic_questions))
+# and create column 'stra' by averaging
+lrn14$stra <- rowMeans(strategic_columns)
+
+```
+
+
+## 2.4 Selecting columns
+
+Often it is convenient to work with only a certain column or a subset of columns of a bigger data frame. There are many ways to select columns of data frame in R and you saw one of them in the previous exercise: `select()` from **dplyr***.
+
+**dplyr** is a popular library for *data wrangling*. There are also convenient [data wrangling cheatsheets](https://rstudio.github.io/cheatsheets/) to help you get started (dplyr, tidyr etc.)
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+lrn14$attitude <- lrn14$Attitude / 10
+deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+lrn14$deep <- rowMeans(lrn14[, deep_questions])
+surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
+lrn14$surf <- rowMeans(lrn14[, surface_questions])
+strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
+lrn14$stra <- rowMeans(lrn14[, strategic_questions])
+```
+
+
+### Instructions
+- Access the **dplyr** library
+- Create object `keep_columns`
+- Use `select()` (possibly together with `one_of()`) to create a new data frame `learning2014` with the columns named in `keep_columns`.
+- Look at the structure of the new dataset
+
+Hint:
+- See the previous exercise for help on how to select columns
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+
+# lrn14 is available
+
+# access the dplyr library
+library(dplyr)
+
+# choose a handful of columns to keep
+keep_columns <- c("gender","Age","attitude", "deep", "stra", "surf", "Points")
+
+# select the 'keep_columns' to create a new dataset
+learning2014 <- lrn14[, keep_columns]
+
+# see the structure of the new dataset
+str(learning2014)
+
+
+```
+
+
+## 2.5 Modifying column names
+
+Sometimes you want to rename your colums. You could do this by creating copies of the columns with new names, but you can also directly get and set the column names of a data frame, using the function `colnames()`.
+
+The **dplyr** library has a `rename()` function, which can also be used. Remember [the cheatsheets](https://rstudio.github.io/cheatsheets/).
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+lrn14$attitude <- lrn14$Attitude / 10
+deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+lrn14$deep <- rowMeans(lrn14[, deep_questions])
+surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
+lrn14$surf <- rowMeans(lrn14[, surface_questions])
+strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
+lrn14$stra <- rowMeans(lrn14[, strategic_questions])
+learning2014 <- lrn14[, c("gender","Age","attitude", "deep", "stra", "surf", "Points")]
+```
+
+### Instructions
+- Print out the column names of `learning2014`
+- Change the name of the second column to 'age'
+- Change the name of 'Points' to 'points'
+- Print out the column names again to see the changes
+
+Hint:
+- You can use `colnames()` similarily to the example. Which index matches the column 'Points'?
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# print out the column names of the data
+colnames(learning2014)
+
+# change the name of the second column
+colnames(learning2014)[2] <- "age"
+
+# change the name of "Points" to "points"
+colnames(learning2014)[7] <- "points"
+
+# print out the new column names of the data
+colnames(learning2014)
+
+
+```
+
+
+## 2.6 Excluding observations
+
+Often your data includes outliers or other observations which you wish to remove before further analysis. Or perhaps you simply wish to work with some subset of your data. 
+
+In the **learning2014** data the variable 'points' denotes the students exam points in a statistics course exam. If the student did not attend an exam, the value of 'points' will be zero. We will remove these observations from the data.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+lrn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+lrn14$attitude <- lrn14$Attitude / 10
+deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+lrn14$deep <- rowMeans(lrn14[, deep_questions])
+surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
+lrn14$surf <- rowMeans(lrn14[, surface_questions])
+strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
+lrn14$stra <- rowMeans(lrn14[, strategic_questions])
+learning2014 <- lrn14[, c("gender","Age","attitude", "deep", "stra", "surf", "Points")]
+colnames(learning2014)[2] <- "age"
+colnames(learning2014)[7] <- "points"
+```
+
+### Instructions
+- Access the **dplyr** library
+- As an example, create object `male_students` by selecting the male students from `learning2014`
+- Override `learning2014` and select rows where the 'points' variable is greater than zero. 
+- If you do not remember how logical comparison works in R, see the 'Logical comparison' exercise from the course 'R Short and Sweet'.
+
+Hint:
+- The "greater than" logical operator is `>`
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# access the dplyr library
+library(dplyr)
+
+# select male students
+male_students <- filter(learning2014, gender == "M")
+
+# select rows where points is greater than zero
+learning2014 <- filter(learning2014, points > 0)
+
+```
+
+
+## 2.7 Visualizations with ggplot2
+
+[**ggplot2**](http://ggplot2.org/) is a popular library for creating stunning graphics with R. It has some advantages over the basic plotting system in R, mainly consistent use of function arguments and flexible plot alteration. ggplot2 is an implementation of Leland Wilkinson's *Grammar of Graphics* — a general scheme for data visualization.
+
+In ggplot2, plots may be created via the convenience function `qplot()` where arguments and defaults are meant to be similar to base R's `plot()` function. More complex plotting capacity is available via `ggplot()`, which exposes the user to more explicit elements of the grammar. (from [wikipedia](https://en.wikipedia.org/wiki/Ggplot2))
+
+There is also a [cheatsheet](https://rstudio.github.io/cheatsheets/) for data visualization with ggplot2.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Access the **ggplot2** library
+- Initialize the plot with data and aesthetic mappings
+- Adjust the plot initialization: Add an aesthetic element to the plot by defining `col = gender` inside `aes()`. 
+- Define the visualization type (points)
+- Draw the plot to see how it looks at this point
+- *Add* a regression line to the plot
+- *Add* the title "Student's attitude versus exam points" with `ggtitle("<insert title here>")` to the plot with regression line
+- Draw the plot again to see the changes
+
+Hints:
+- Use `+` to add the title to the plot
+- The plot with regression line is saved in the object `p3`
+- You can draw the plot by typing the object name where the plot is saved
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# Access the gglot2 library
+library(ggplot2)
+
+# initialize plot with data and aesthetic mapping
+p1 <- ggplot(learning2014, aes(x = attitude, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point()
+
+# draw the plot
+p2 
+
+# add a regression line
+p3 <- p2 + geom_smooth(method = "lm")
+
+# add a main title
+p4 <- p3 + ggtitle("Relationship between Attitude and Points")
+
+# draw the plot!
+p4
+
+```
+
+
+## 2.8 Exploring a data frame
+
+Often the most interesting feature of your data are the relationships between the variables. If there are only a handful of variables saved as columns in a data frame, it is possible to visualize all of these relationships neatly in a single plot.
+
+Base R offers a fast plotting function `pairs()`, which draws all possible scatter plots from the columns of a data frame, resulting in a scatter plot matrix. Libraries **GGally** and **ggplot2** together offer a slow but more detailed look at the variables, their distributions and relationships.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Draw a scatter matrix of the variables in learning2014 (other than gender)
+- Adjust the code: Add the argument `col` to the `pairs()` function, defining the colour with the 'gender' variable in learning2014. 
+- Draw the plot again to see the changes.
+- Access the **ggpot2** and **GGally** libraries and create the plot `p` with `ggpairs()`. 
+- Draw the plot. Note that the function is a bit slow.
+- Adjust the argument `mapping` of `ggpairs()` by defining `col = gender` inside `aes()`. 
+- Draw the plot again.
+- Adjust the code a little more: add another aesthetic element `alpha = 0.3` inside `aes()`.
+- See the difference between the plots?
+
+Hints:
+- You can use `$` to access a column of a data frame.
+- Remember to separate function arguments with a comma
+- You can draw the plot `p` by simply typing it's name: just like printing R objects.
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# draw a scatter plot matrix of the variables in learning2014.
+# [-1] excludes the first column (gender)
+pairs(learning2014[-1])
+
+# access the GGally and ggplot2 libraries
+library(GGally)
+library(ggplot2)
+
+# create a more advanced plot matrix with ggpairs()
+p <- ggpairs(learning2014, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
+
+# draw the plot
+p
+```
+
+
+## 2.9 Simple regression
+
+[Regression analysis](https://en.wikipedia.org/wiki/Regression_analysis) with R is easy once you have your data in a neat data frame. You can simply use the `lm()` function to fit a linear model. The first argument of `lm()` is a `formula`, which defines the target variable and the explanatory variable(s). 
+
+The formula should be `y ~ x`, where `y` is the target (or outcome) variable and `x` the explanatory variable (predictor). The second argument of `lm()` is `data`, which should be a data frame where `y` and `x` are columns. 
+
+The output of `lm()` is a linear model object, which can be saved for later use. The generic function `summary()` can be used to print out a summary of the model.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Create a scatter plot of 'points' versus 'attitude'.
+- Fit a regression model where 'points' is the target and 'attitude' is the explanatory variable
+- Print out the summary of the linear model object
+
+Hints:
+- Replace `1` with the name of the explanatory variable in the formula inside `lm()`
+- Use `summary()` on the model object to print out a summary
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# a scatter plot of points versus attitude
+library(ggplot2)
+qplot(attitude, points, data = learning2014) + geom_smooth(method = "lm")
+
+# fit a linear model
+my_model <- lm(points ~ 1, data = learning2014)
+
+# print out a summary of the model
+summary(my_model)
+
+```
+
+
+## 2.10 Multiple regression
+
+When there are more than one explanatory variables in the linear model, it is called multiple regression. In R, it is easy to include more than one explanatory variables in your linear model. This is done by simply defining more explanatory variables with the `formula` argument of `lm()`, as below
+
+```
+y ~ x1 + x2 + ..
+```
+Here `y` is again the target variable and `x1, x2, ..` are the explanatory variables.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Draw a plot matrix of the learning2014 data with `ggpairs()`
+- Fit a regression model where `points` is the target variable and both `attitude` and `stra` are the explanatory variables. 
+- Print out a summary of the model.
+- Adjust the code: Add one more explanatory variable to the model. Based on the plot matrix, choose the variable with the third highest (absolute) correlation with the target variable and use that as the third variable. 
+- Print out a summary of the new model.
+
+Hint:
+- The variable with the third highest absolute correlation with `points` is `surf`.
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+library(GGally)
+library(ggplot2)
+# create an plot matrix with ggpairs()
+ggpairs(learning2014, lower = list(combo = wrap("facethist", bins = 20)))
+
+# create a regression model with multiple explanatory variables
+my_model2 <- lm(points ~ attitude + stra, data = learning2014)
+
+# print out a summary of the model
+summary(my_model2)
+
+```
+
+
+## 2.11 Graphical model validation
+
+R makes it easy to graphically explore the validity of your model assumptions. If you give a linear model object as the first argument to the `plot()` function, the function automatically assumes you want diagnostic plots and will produce them. You can check the help page of plotting an lm object by typing `?plot.lm` or `help(plot.lm)` to the R console. 
+
+In the plot function you can then use the argument `which` to choose which plots you want. `which` must be an integer vector corresponding to the following list of plots:
+
+which | graphic                                 
+----- | --------
+1     | Residuals vs Fitted values 
+2     | Normal QQ-plot
+3     | Standardized residuals vs Fitted values
+4     | Cook's distances
+5     | Residuals vs Leverage 
+6     | Cook's distance vs Leverage 
+
+<br>
+We will focus on plots 1, 2 and 5: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Create the linear model object `my_model2`
+- Produce the following diagnostic plots using the `plot()` function: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage using the argument `which`. 
+- Before the call to the `plot()` function, add the following: `par(mfrow = c(2,2))`. This will place the following 4 graphics to the same plot. Execute the code again to see the effect.
+
+Hint:
+- You can combine integers to an integer vector with `c()`. For example: `c(1,2,3)`.
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# create a regression model with multiple explanatory variables
+my_model2 <- lm(points ~ attitude + stra, data = learning2014)
+
+# draw diagnostic plots using the plot() function. Choose the plots 1, 2 and 5
+plot(my_model2, which = c(1, 2, 5))
+
+```
+
+
+## 2.12 Making predictions
+
+Okay, so let's assume that we have a linear model which seems to fit our standards. What can we do with it?
+
+The model quantifies the relationship between the explanatory variable(s) and the dependent variable. The model can also be used for predicting the dependent variable based on new observations of the explanatory variable(s). 
+
+In R, predicting can be done using the `predict()` function. (see `?predict`). The first argument of predict is a model object and the argument `newdata` (a data.frame) can be used to make predictions based on new observations. One or more columns of `newdata` should have the same name as the explanatory variables in the model object.
+
+```{r, echo=FALSE}
+# Pre-exercise-code (Run this code chunk first! Do NOT edit it.)
+
+# Click the green arrow ("Run Current Chunk") in the upper-right corner of this chunk. This will initialize the R objects needed in the exercise. Then move to Instructions of the exercise to start working.
+
+learning2014 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/learning2014.txt", sep = ",", header = T)
+```
+
+### Instructions
+
+- Create object `m` and print out a summary of the model
+- Create object `new_attitudes`
+- Adjust the code: Create a new data frame with a column named 'attitude' holding the new attitudes defined in `new_attitudes`
+- Print out the new data frame
+- `predict()` the new student's exam points based on their attitudes, using the `newdata` argument
+
+Hints:
+- Type `attitude = new_attitudes` inside the `data.frame()` function.
+- Give the `new_data` data.frame as the `newdata` argument for `predict()`
+
+### R code
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# learning2014 is available
+
+# Create model object m
+m <- lm(points ~ attitude, data = learning2014)
+
+# print out a summary of the model
+
+
+# New observations
+new_attitudes <- c("Mia" = 3.8, "Mike"= 4.4, "Riikka" = 2.2, "Pekka" = 2.9)
+new_data <- data.frame(attitude = "change me!")
+
+# Print out the new data
+
+
+# Predict the new students exam points based on attitude
+predict(m, newdata = "change me!")
+
+
+```
+
+**Awesome work!**
+
