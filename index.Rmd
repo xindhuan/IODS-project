@@ -14,13 +14,13 @@ output:
 
 # Introduction to Open Data Science - Course Project
 
-```{r child = "chapter1.Rmd", echo=FALSE}
+```{r child = "chapter1.Rmd"}
 # This will include Chapter 1 (that is updated in its own file) in the document.
 ```
   
 ***
   
-```{r child = "chapter2.Rmd", echo=FALSE}
+```{r child = "chapter2.Rmd"}
 # This will include Chapter 2 (that is updated in its own file) in the document.
 ```
 
@@ -31,5 +31,12 @@ output:
 ```
 
 ***
+
+```{r child = "chapter4.Rmd"}
+
+```
+
+***
+
 (more chapters to be added similarly as we proceed with the course!)
 

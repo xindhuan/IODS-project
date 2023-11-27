@@ -1,0 +1,300 @@
+---
+title: "chapter4.Rmd"
+author: "Xindi Huang"
+date: "2023-11-27"
+output: html_document
+---
+
+
+# Assignment 4: Clustering and classification
+
+```{r}
+date()
+
+# laod packages
+library(tidyverse)
+library(dplyr)
+library(MASS)
+if (!require(caret)) {
+  install.packages("caret")
+  library(caret)
+}
+```
+
+## Boston dataset
+```{r}
+# Load the Boston data from the MASS package
+data(Boston)
+
+# Explore the structure and dimensions of the data
+str(Boston)
+dim(Boston)
+
+```
+
+The `Boston` dataset contains information on various features related to housing in different suburbs of Boston. The dataset has 506 observations and 14 variables.
+
+Variables info :
+- crim: Per capita crime rate by town.
+- zn: Proportion of residential land zoned for lots over 25,000 sq.ft.
+- indus: Proportion of non-retail business acres per town.
+- chas: Charles River dummy variable (1 if tract bounds river, 0 otherwise).
+- nox: Nitrogen oxides concentration (parts per 10 million).
+- rm: Average number of rooms per dwelling.
+- age: Proportion of owner-occupied units built prior to 1940.
+- dis: Weighted mean of distances to five Boston employment centers.
+- rad: Index of accessibility to radial highways.
+- tax: Full-value property-tax rate per $10,000.
+- ptratio: Pupil-teacher ratio by town.
+- black: Proportion of blacks by town.
+- lstat: Lower status of the population (percent).
+- medv: Median value of owner-occupied homes in $1000s.
+
+## Graphical overview and summaries of the variables
+
+```{r}
+# Graphical overview of the data
+pairs(Boston)
+# Summaries of the variables
+summary(Boston)
+```
+
+### 1. Statistical summaries of the variables in the `Boston` dataset.
+
+- **`crim` (Crime Rate):**
+Indicats a right-skewed distribution.The majority of towns have lower crime rates, with 25% having a rate below 0.08205, but a few towns have high crime rate.
+
+- **`zn` (Proportion of Residential Land):**
+Shows a right-skewed distribution with many towns having little residential land.
+
+- **`indus` (Proportion of Non-Retail Business Acres):**
+Display a mix of industrial and residential areas.
+
+- **`chas` (Charles River Dummy Variable):**
+Most suburbs don't border the Charles river, only 6.92% of towns border the river.
+
+- **`nox` (Nitrogen Oxides Concentration):**
+Concentration ranges from 0.385 to 0.871. Mean of 0.5547 suggests a moderate level of nitrogen oxides in most zones, but some zones hace high level of nitrogen oxides.
+
+- **`rm` (Average Number of Rooms):**
+Display a normal distribution, shoing the most have median number of 6.208 rooms.
+
+- **`age` (Proportion of Older Units):**
+Mean of 68.57 suggests a mix of older and newer units. The distribution is left-skewed indicating many houses are older.
+
+- **`dis` (Weighted Mean of Distances to Employment Centers):**
+The right-skewed distribution of the `dis` variable suggests that most suburbs have a relatively short distance to employment centers, as indicated by lower values.
+
+- **`rad` (Index of Accessibility to Radial Highways):**
+`rad` variable appears bimodal, suggesting that suburbs tend to fall into two categories: those that are very close to highways and those that are very far
+
+- **`tax` (Property Tax Rate):**
+Shows bimodal, ranges from 187 to 711.
+
+- **`ptratio` (Pupil-Teacher Ratio):**
+Mean of 18.46 indicates a moderate pupil-teacher ratio.
+
+- **`black` (Proportion of Blacks):**
+Mean of 356.67 suggests a mix of racial proportions.
+
+- **`lstat` (Lower Status of the Population):**
+Mean of 12.65 indicates a mix of lower and higher-status populations.
+
+- **`medv` (Median Value of Homes):**
+Mean of 22.53 indicates a moderate median home value.
+
+### 2. Relationships between the variables 
+**Positive correlation:**
+- `rm` and `medv`: as more rooms may be associated with higher home values.
+- `idus` and `nox`: areas with more industrial land use might have higher concentrations of nitrogen oxides.
+- `age` and `nox`: Older buildings might be associated with higher concentrations of nitrogen oxides.
+- `rad` and `tax`: There could be a positive correlation between the accessibility to highways and the property tax rate.
+
+**Negtive correlation**
+- `dis` and `nox`: as areas closer to employment centers might have lower concentrations of nitric oxides.
+- `rm` and  `lstat`: higher-status neighborhoods might have more rooms on average.
+- `lstat` and `medv`: areas with a lower socioeconomic status might have lower home values.
+
+### 3. Overall Observations:
+
+- The dataset captures a diverse range of features related to housing in Boston suburbs.
+- Many variables exhibit right-skewed distributions, suggesting that the majority of towns have lower values.
+
+## Standardize the dataset and print out summaries of the scaled data
+
+```{r}
+# center and standardize variables
+boston_scaled <- as.data.frame(scale(Boston))
+
+# summaries of the scaled variables
+summary(boston_scaled)
+
+```
+
+```{r}
+
+# create a quantile vector of crim
+boston_scaled$crim <- as.numeric(boston_scaled$crim)
+bins <- quantile(boston_scaled$crim)
+print(bins)
+
+# creat a categorical variable 'crime' based on quantiles
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE)
+summary(crime)
+
+# create a string vector for labels
+labels <- c("low", "med_low", "med_high", "high")
+
+# adjust the cut function by adding the label argument
+crime <- cut(boston_scaled$crim, breaks = bins, labels = labels, include.lowest = TRUE)
+
+# look at the table of the new factor crime
+table(crime)
+
+# add the new categorical value in the original Boston dataset
+Boston$crime <- crime
+Boston$crime <- as.factor(Boston$crime)
+
+# remove original crim from the dataset
+Boston <- dplyr::select(Boston, -crim)
+
+# divide the dataset into train and test sets (80% train, 20% test)
+ind <- sample(nrow(Boston),  size = nrow(Boston) * 0.8)
+train <- Boston[ind,]
+test <- Boston[-ind,]
+
+```
+
+
+## Linear Discriminant Analysis 
+```{r}
+# Fit the linear discriminant analysis on the train set
+lda_fit <- lda(crime ~ ., data=train)
+
+# Summary the lda fitting
+lda_fit
+
+# target classes as numeric
+classes <- as.numeric(train$crime)
+
+# plot the lda results
+plot(lda_fit, dimen = 2, col = classes, pch = classes) 
+
+```
+
+## Predictions and Cross-tabulation
+```{r}
+# Save the crime categories from the test set
+correct_classes <- test$crime
+
+# Remove the categorical crime variable from the test dataset
+test <- dplyr::select(test, -crime)
+
+# Predict the classes with the LDA model on the test data
+lda_pred <- predict(lda_fit, newdata = test)$class
+
+# Cross-tabulate the results with the crime categories from the test set
+table(correct_classes, lda_pred)
+
+```
+
+The results of the Linear Discriminant Analysis (LDA) in predicting crime categories on the test set:
+
+- **Accurate Predictions:** The diagonal entries showcase instances where the model correctly identified the crime category. For instance, it accurately predicted 17 cases in the "low" category, 13 cases in "med_low," 9 cases in "med_high," and 24 cases in the "high" category.
+
+- **Misclassifications:** Off-diagonal entries reveal instances where the model made incorrect predictions. For example, in the "low" category, there were 12 instances misclassified as "med_low," and 1 instance as "med_high." Notably, there were no instances misclassified as "high" in this category.
+
+- **Category-specific Performance:** Each row corresponds to the actual crime category, allowing us to delve into how well the model performed within each specific category.
+
+In essence, this table offers a granular view of the model's strengths and areas for improvement across different crime categories. It provides valuable insights for refining the model and enhancing its accuracy in predicting crime rates.
+
+## Clustering
+
+```{r}
+# Reload the Boston dataset
+data(Boston)
+
+# Standardize the dataset
+boston_scaled <- scale(Boston)
+
+# Calculate distances between observations
+dist_eu <- dist(boston_scaled)
+summary(dist_eu)
+```
+
+## k-means algorithm with varying numbers of clusters (k)
+
+```{r}
+# Determine the number of clusters
+k_max <- 10
+
+# Calculate total within-cluster sum of squares (TWSS) for different cluster numbers
+twss <- sapply(1:k_max, function(k) kmeans(boston_scaled, centers = k)$tot.withinss)
+
+# Visualize the TWSS
+plot(1:k_max, twss, type = "b", pch = 19, frame = FALSE, col = "blue", xlab = "Number of clusters", ylab = "Total Within Sum of Squares")
+```
+
+```{r}
+# Choose the optimal number of clusters
+optimal_clusters <- 4
+
+# Run k-means with the optimal number of clusters
+kmeans_result <- kmeans(boston_scaled, centers = optimal_clusters)
+
+# Creating a data frame for plotting
+plot_data <- as.data.frame(boston_scaled)
+plot_data$cluster <- factor(kmeans_result$cluster)
+
+# Visualize clusters using pairs() with colors
+ggplot(plot_data, aes(x = rm, y = lstat)) +
+  geom_point(aes(color = cluster)) +
+  labs(color = 'Cluster') 
+```
+
+**Cluster Distribution:** The plot shows how the observations are grouped into four different clusters. Each cluster is represented by a different color.
+
+**Cluster 1:** Higher `rm` and moderate to low `lstat` values, indicating larger houses with a lower proportion of lower-status population.
+
+**Cluster 2:** Moderate to high rm values but very low lstat values, suggesting these areas have larger houses and very low lower-status population proportions.
+
+**Cluster 3:** Reflects neighborhoods with smaller homes (low `rm``) where the community leans towards a higher percentage of lower-status residents.
+
+**Cluster 4:** Moderate `rm` values and `lstat` values, indicating that the average-sized rooms with a moderate lower-status population.
+
+
+**Correlation Inference:** The negative correlation between the number of rooms (`rm`) and the percentage of lower-status population (`lstat`) aligns with our expectations. In areas with more rooms, there tends to be a lower percentage of lower-status residents.
+
+**Cluster Separation:** The separation between clusters indicates how distinct the groups are based on the two variables used. Cluster 1 stands out from the rest, indicating that areas with small houses and very low lower-status proportions are distinct from the others.
+
+
+```{r}
+# Standardize the original Boston dataset
+original_boston_scaled <- as.data.frame(scale(Boston))
+
+# Perform k-means with some reasonable number of clusters
+reasonable_clusters <- 4
+kmeans_original <- kmeans(original_boston_scaled, centers = reasonable_clusters)
+
+# Perform LDA using the clusters as target classes
+lda_fit <- lda(kmeans_original$cluster ~ ., data = original_boston_scaled)
+
+# Visualize LDA results with a biplot
+plot(lda_fit)
+```
+```{r}
+lda_fit$scaling
+```
+
+The values in the output represent the coefficients or loadings of each original variable on the linear discriminants (LD1, LD2, and LD3) in the Linear Discriminant Analysis (LDA) model:
+
+- **LD1, LD2, LD3:** These are the linear discriminants generated by the LDA. Each row corresponds to a variable in the original dataset.
+
+- **Coefficients (Loadings):** These values indicate the contribution of each variable to the respective discriminant. A positive coefficient means that an increase in the variable is associated with a higher value of the discriminant, while a negative coefficient suggests the opposite.
+
+- **For LD1:**
+  - `crim`: 0.01913416 (positive) - A higher crime rate is associated with a higher value of LD1.
+  - `zn`: 0.15673395 (positive) - Higher residential land zoned for large lots is associated with a higher value of LD1.
+  - `indus`: -0.52081410 (negative) - Higher industrial acres per town is associated with a lower value of LD1.
+  
+These coefficients indicate the direction and strength of the relationship between the original variables and the discriminants.
