@@ -1,0 +1,242 @@
+---
+title: "chapter5"
+output: html_document
+---
+
+# Assignment 5: Dimensionality reduction techniques
+## Load required packages
+```{r}
+library("readr")
+library("tibble")
+library("dplyr")
+library("corrplot")
+library("ggplot2")
+library("GGally")
+library("tidyr")
+library("FactoMineR")
+```
+
+## Exploring the countries
+```{r}
+# load dataset
+human <- read_csv("./data/human.csv", show_col_types = FALSE)
+
+# move the country names to rownames
+human <- column_to_rownames(human, "Country")
+
+# visualize the 'human_' variables with ggpairs
+ggpairs(human, progress = FALSE)
+```
+
+```{r}
+summary(human)
+```
+
+```{r}
+# compute the correlation matrix and visualize it with corrplot
+cor_matrix <- cor(human)
+corrplot(cor_matrix)
+```
+
+Interpret the outputs and comment on the distributions of the variables and the relationships between them based on the provided summary statistics and scatterplot matrix:
+
+### Interpretation:
+
+1. **Positive correlation**
+   - `Edu2.FM` and `Labo.FM`(Corr: 0.593): show a strong positive correlation, indicating a notable relationship. As expected, countries with higher expected years of education (Edu.Exp) tend to have higher values of Edu2.FM.
+
+   - `Edu2.FM` and `Life.Exp` (Corr: 0.576): exhibit a strong positive correlation (Corr: 0.576). Countries with higher educational gender equality (Edu2.FM) tend to have higher life expectancies.
+
+   - `Edu2.FM` and `GNI` show a moderate positive correlation (Corr: 0.430). There's a tendency for countries with higher Gross National Income (GNI) per capita to have higher values of Edu2.FM.
+
+   - `Labo.FM` and `Mat.Mor` (Corr: 0.240**): A moderate positive correlation suggests that countries with higher labor force participation tend to have slightly higher maternal mortality rates.
+
+   - `Labo.FM` and `Parli.F` (Corr: 0.250**): A moderate positive correlation implies that countries with higher labor force participation also tend to have a slightly higher percentage of seats held by women in national parliaments.
+
+   - `Edu.Exp` and `Life.Exp` (Corr: 0.789***): A strong positive correlation indicates a significant relationship between higher expected years of education and higher life expectancy.
+
+   - `Edu.Exp` and `GNI` (Corr: 0.624***): A strong positive correlation suggests that countries with higher expected years of education also tend to have higher Gross National Income per capita.
+
+   - `Edu.Exp` and `Parli.F` (Corr: 0.206*): A weak positive correlation suggests a slight relationship between higher expected years of education and a higher percentage of seats held by women in national parliaments.
+
+   - `Life.Exp` and `GNI` (Corr: 0.627***): A strong positive correlation indicates that countries with higher life expectancy tend to have higher Gross National Income per capita.
+
+   - `Life.Exp` and `Parli.F` (Corr: 0.170*): A weak positive correlation suggests a slight relationship between higher life expectancy and a higher percentage of seats held by women in national parliaments.
+
+   - `Mat.Mor` and `Ado.Birth` (Corr: 0.759***): A strong positive correlation indicates that higher maternal mortality rates are associated with higher adolescent birth rates.
+
+2. **Negative correlation**
+
+   - `Edu2.FM` and `Mat.Mor` demonstrate a strong negative correlation (Corr: -0.661). Higher gender equality in education (Edu2.FM) is associated with lower maternal mortality rates (Mat.Mor).
+
+   - `Edu2.FM` and `Ado.Birth` (Corr: -0.529***): A strong negative correlation suggests a robust relationship between the variables. Countries with higher gender equality in education (Edu2.FM) tend to have lower adolescent birth rates (Ado.Birth).
+
+   - `Edu.Exp` and `Mat.Mor` (Corr: -0.736***): A strong negative correlation suggests that countries with higher expected years of education tend to have lower maternal mortality rates.
+
+   - `Edu.Exp` and `Ado.Birth` (Corr: -0.704***): A strong negative correlation indicates that higher expected years of education are associated with lower adolescent birth rates.
+
+   - `Life.Exp` and `Mat.Mor` (Corr: -0.857***): A very strong negative correlation suggests that higher life expectancy is associated with lower maternal mortality rates.
+
+   - `Life.Exp` and `Ado.Birth` (Corr: -0.729***): A strong negative correlation indicates that higher life expectancy is associated with lower adolescent birth rates.
+
+   - `GNI` and `Mat.Mor` (Corr: -0.495***): A moderate negative correlation suggests that higher Gross National Income is associated with lower maternal mortality rates.
+
+   - `GNI` and `Ado.Birth` (Corr: -0.557***): A moderate negative correlation indicates that higher Gross National Income is associated with lower adolescent birth rates.
+
+
+## Principal component analysis
+
+### PCA with raw data
+```{r}
+# Perform PCA on the raw data
+pca_human_raw <- prcomp(human, scale. = FALSE)
+
+# Draw a biplot
+biplot(pca_human_raw, cex = 0.8, col = c("grey40", "deeppink2"), xlab = "PC1", ylab = "PC2")
+```
+
+### PCA with standardize data
+```{r}
+# Standardize the variables
+human_std <- scale(human)
+
+# Perform PCA on the standardized data
+pca_human <- prcomp(human_std)
+
+# Draw a biplot for standardized data
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = "PC1", ylab = "PC2")
+
+```
+The results suggest that there are differences in the scaling and orientation of the principal components and variable arrows between the PCA plots using raw and standardized data.
+
+### 1. PCA Plot with Raw Data:
+
+- **X-axis and Y-axis Ranges:**
+  - X-axis: -0.4 to 0.1
+  - Y-axis: -0.4 to 0.1
+  - The coordinates of the GNI arrow: (x < 0.4, y = 0.0)
+
+- **Variable Arrow:**
+  - Arrow pointing towards GNI: (x < 0.4, y = 0.0)
+
+### 2. PCA Plot with Standardized Data:
+
+- **X-axis and Y-axis Ranges:**
+  - X-axis: -0.2 to 0.2
+  - Y-axis: -0.2 to 0.2
+  - Coordinates of variable arrows:
+    - Life.Exp: (x < -0.2, y = 0.0)
+    - Edu2.FM: (x < -0.15, y = 0.0)
+    - GNI: (x < -0.11, y = 0.0)
+    - Edu.Exp: (x < -0.15, y = 0.03)
+    - Parli.F: (x = -0.03, y > 0.15)
+    - Labo.FM: (x = 0.01, y > 0.16)
+    - Mat.Mor: (x > 0.16, y = 0.02)
+    - Ado.Birth: (x > 0.15, y = 0.01)
+
+### Interpretation:
+
+1. **Scaling:**
+   - The raw data plot has larger ranges (-0.4 to 0.1) compared to the standardized data plot (-0.2 to 0.2).
+   - This difference in scaling might be due to the original variable variances being considered in the raw data.
+
+2. **Orientation:**
+   - The orientation of the axes and variable arrows differs between the two plots.
+   - Standardizing data removes the influence of variable scales, providing a more equal contribution from each variable in determining principal components.
+
+3. **Variable Arrows:**
+   - Arrows in the standardized plot indicate the direction and strength of the contribution of each variable to the principal components.
+   - In the standardized plot, the arrows are scaled based on the relative importance of variables after standardization.
+
+4. **GNI Arrow:**
+   - The GNI arrow in the raw data plot points towards (x < 0.4, y = 0.0), indicating its contribution to the principal components based on the original variable scales.
+
+### Conclusion:
+
+The differences in scaling and orientation between the two plots highlight the impact of variable scales on PCA results. Standardizing data is crucial to ensure that variables with larger scales do not dominate the analysis. The standardized plot provides a clearer representation of variable contributions to the principal components.
+
+## Biplot of PCA
+```{r}
+# create and print out a summary of pca_human
+s <- summary(pca_human)
+
+
+# rounded percentanges of variance captured by each PC
+pca_pr <- round(100*s$importance[2, ], digits = 1)
+
+# print out the percentages of variance
+print(pca_pr)
+
+# create object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# draw a biplot
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+
+```
+The principal component analysis (PCA) results and the biplot can provide insights into the underlying structure and relationships within the standardized human data.
+
+1. **Principal Component 1 (PC1):**
+   - PC1 captures the highest percentage of variance (53.6%), indicating it carries a substantial amount of information.
+   - Variables with arrows pointing in the same direction as the positive PC1 axis (rightwards) are positively correlated with PC1.
+   - In this PCA plot, `Mat.Mor`, and `Ado.Birth` are on the positive side of PC1, suggesting they contribute positively to the variation along PC1.
+   - `GNI`, `Edu2.FM`, `Edu.Exp`and `Life.Exp` are on the negative side, indicating a negative association with PC1.
+
+2. **Principal Component 2 (PC2):**
+   - PC2 captures 16.2% of the variance, providing additional information about the data structure.
+   - Arrows pointing upwards or downwards indicate positive or negative correlations with PC2, respectively.
+   - `Parli.F` and `Labo.FM` are positively associated with PC2, suggesting they contribute positively to the variation along PC2.
+   
+
+3. **Overall Interpretation:**
+   - PC1 seems to represent a dimension related to economic factors (GNI) and health-related variables (Edu.Exp, Mat.Mor, Ado.Birth).
+   - PC2 might reflect social and labor-related factors (Parli.F, Labo.FM) and educational factors (Edu.Exp).
+
+## Tea data exploration
+
+```{r}
+# load tea dataset
+tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/tea.csv", stringsAsFactors = TRUE)
+
+
+# Explore the structure and dimensions of the data
+str(tea)
+dim(tea)
+summary(tea)
+# View the contents of the dataset
+View(tea)
+```
+
+```{r}
+# Interesting column names to keep in the dataset
+keep_columns <- c("Tea", "how", "sex", "where", "work", "price", "home", "SPC")
+
+# select the 'keep_columns' to create a new dataset
+tea_col <- dplyr::select(tea, keep_columns)
+
+# look at the summaries and structure of the data
+str(tea_col)
+summary(tea_col)
+
+# multiple correspondence analysis
+mca <- MCA(tea_col, graph = FALSE)
+
+# summary of the model
+summary(mca)
+
+# visualize MCA
+plot(mca, invisible=c("ind"), graph.type = "classic", habillage = "quali")
+```
+
+### Interpretation:
+- The analysis reveals patterns and associations between the selected columns (`Tea`, `how`, `sex`, `where`, `work`, `price`, `home`, `SPC`) in the tea dataset. 
+
+- Categorical variables, such as `how,` `sex,` and `where,` play a significant role in shaping the observed patterns.
+  - For example, the category "unpackaged" has a high positive contribution to Dim.1 (1.881), indicating a strong association with this dimension.
+  - The category "Earl Grey" has a high negative contribution to Dim.1 (-0.269), indicating a negative association. and "Green" has a high positive contribution to Dim.2 (0.857)
+
+- Some individuals and categories are strongly associated with specific dimensions, providing insights into the factors that influence tea preferences. 
+  - For example, individual 10 has a high positive contribution to Dim.1 (0.833), indicating a strong association with this dimension.
+  - Individual 5 has a high negative contribution to Dim.1 (-0.308), indicating a negative association.
+
