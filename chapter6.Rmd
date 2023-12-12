@@ -1,0 +1,273 @@
+---
+title: "chapter6"
+output: html_document
+---
+
+```{r}
+# Load required libraries
+library(lme4)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(Matrix)
+```
+
+# Analysis of Longitudinal Data I: Graphical Displays and Summary Measure Approach
+
+## Meet and Repeat: PART I
+
+```{r}
+# load data
+RATS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/rats.txt", sep = '\t', header = TRUE)
+
+names(RATS)
+
+str(RATS)
+
+summary(RATS)
+
+```
+## Graphical displays of longitudinal data I:
+
+```{r}
+# convert categorical variables to factors
+RATS$ID <- factor(RATS$ID)
+RATS$Group <- factor(RATS$Group)
+
+# convert data sets to long form
+RATSL <- pivot_longer(RATS, cols = -c(ID, Group), 
+                      names_to = "WD",
+                      values_to = "Weight") %>% 
+  mutate(Time = as.integer(substr(WD, 3, 4))) %>%
+  arrange(Time)
+
+
+# Take a glimpse at the RATSL data
+glimpse(RATSL)
+
+# Drawing the plot
+
+ggplot(RATSL, aes(x = Time, y = Weight, linetype = ID)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_x_continuous(name = "Time", breaks = seq(0,60,20)) +
+  scale_y_continuous(name = "Rats weight")
+
+
+```
+The  line plot aims to illustrate the weight of rats over time, with each rat represented by a unique line and grouped by treatment. Group 1 generally has lower weights, Group 2 has a majority in the 400-500 grams range with a potential outlier, and Group 3 has a majority in the 500-550 grams range with a potential subgroup at slightly lower weights.
+
+```{r}
+# standardize the variable weight
+RATSL <- RATSL %>%
+  group_by(Time) %>%
+  mutate(stdrats = scale(Weight)) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(RATSL)
+
+# Plot again with the standardised weight
+ggplot(RATSL, aes(x = Time, y = stdrats, linetype = ID)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  scale_y_continuous(name = "standardized Weight")
+
+```
+The Time and Weight positive correlation does not show with the  standardised weight.
+
+```{r}
+summary(RATSL)
+```
+
+```{r}
+# Number of rat weight (per group):
+n <- RATSL$Time %>% unique() %>% length()
+
+# Summary data with mean and standard error of weight by group and time
+RATSS <- RATSL %>%
+  group_by(Group, Time) %>%
+  summarise( mean = mean(Weight), se = sd(Weight)/sqrt(n) ) %>%
+  ungroup()
+
+glimpse(RATSS)
+```
+```{r}
+ggplot(RATSS, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2,3)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1,2,3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3) +
+  theme(legend.position = c(0.8,0.5)) +
+  scale_x_continuous(name = "Time", breaks = seq(0, 60, 20)) +
+  scale_y_continuous(name = "Mean Weight of Rats +/- error")
+```
+The plot effectively highlights that Groups 2 and 3 exhibit significantly higher weights compared to Group 1. However, it's important to note that Group 2 had a notable outlier or abnormal weight observation, which might have influenced the overall group's weight distribution. Despite this anomaly, the overall trend indicates that Groups 2 and 3 tend to have higher weights over the observed time period.
+
+```{r}
+# find outlier
+RATSL8S <- RATSL %>%
+  filter(Time > 1) %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(Weight) ) %>%
+  ungroup()
+
+glimpse(RATSL8S)
+
+# boxplot of the mean weight and Group
+ggplot(RATSL8S, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "#AABB4e") +
+  scale_y_continuous(name = "Mean Rats Weight")
+```
+One of the mean values in Group 2 stands out significantly, appearing much higher than the other means. As a result, this particular mean is considered an outlier and will be rigorously excluded from the analysis.
+
+```{r}
+# Create a new data by filtering the outlier and adjust the ggplot code the draw the plot again with the new data
+RATSL8S1 <- RATSL8S %>%
+  filter(mean <= 550)
+
+ggplot(RATSL8S1, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "#AABB4e") +
+  scale_y_continuous(name = "Mean Rats Weight")
+```
+##T-test and Anova
+
+```{r}
+# add the baseline from the original data as a new variable to the summary data
+RATSL8S2 <- RATSL8S %>%
+  mutate(baseline = RATS$WD1)
+
+# Fit the linear model with the mean as the response 
+fit <- lm(mean ~ baseline + Group, data = RATSL8S2)
+
+# Compute the analysis of variance table for the fitted model with anova()
+anova(fit)
+```
+- The baseline variable (WD1) is highly significant (p < 0.001), indicating a strong impact on the mean response. The observed F value (1859.82) is very high, reinforcing the significance of the baseline variable.
+- The Group variable has a marginally significant p-value (0.07586), suggesting some evidence of a difference in means between groups. The F value for Group is 3.22.
+- The residual term represents unexplained variability in the model. The degrees of freedom for residuals are 12, and the sum of squares is 1636.
+
+**Conclusion:**
+- The baseline variable (WD1) significantly influences the mean response, indicating its importance in explaining variability in the model.
+- While the Group variable shows a marginal significance, with a p-value close to 0.05, it suggests that there might be some evidence of differences in means between groups. However, this evidence is not as strong as the impact of the baseline variable.
+
+#Analysis of Longitudinal Data II: Linear Mixed Effects Models for Normal Response Variables
+
+## Meet and Repeat: PART II
+
+```{r}
+# load dataset
+BPRS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/BPRS.txt", sep  =" ", header = TRUE)
+
+# check dataset
+str(BPRS)
+dim(BPRS)
+summary(BPRS)
+
+
+# convert categorical variables to factors
+BPRS$treatment <- factor(BPRS$treatment)
+BPRS$subject <- factor(BPRS$subject)
+
+# convert data sets to long form
+BPRSL <-  pivot_longer(BPRS, cols=-c(treatment,subject),
+                       names_to = "weeks",
+                       values_to = "bprs") %>% 
+  mutate(week = as.integer(substr(weeks,5,5))) %>% 
+  arrange(weeks)
+
+glimpse(BPRSL)
+```
+## Graphical displays of longitudinal data II:
+
+```{r}
+# Drawing the plot
+ggplot(BPRSL, aes(x = week, y = bprs, linetype = subject, color = treatment)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  theme(legend.position = "top") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+```
+There is no significant discernible variation observed among the treatments.
+
+## Multiple regression model
+```{r}
+# create a regression model BPRS_reg
+BPRS_reg <- lm(bprs ~ week + treatment, data = BPRSL)
+
+summary(BPRS_reg)
+```
+
+- The estimated intercept is 46.4539. This represents the predicted `bprs` when both `week` and `treatment` are zero.
+- For each one-unit increase in `week`, the estimated `bprs` decreases by -2.2704.
+- The coefficient for `treatment2` is 0.5722. However, it is not statistically significant (p-value = 0.661), suggesting that it does not have a significant impact on `bprs`.
+- The residuals (differences between observed and predicted `bprs`) range from -22.454 to 50.244. These values provide insight into the spread of the model errors.
+- The F-statistic tests the overall significance of the model. With a p-value < 2.2e-16, the model is statistically significant, suggesting that at least one predictor variable is contributing significantly to explaining the variability in `bprs`.
+
+In summary, the linear regression model indicates that `week` is a significant predictor of `bprs`, with each one-unit increase in `week` associated with a decrease in `bprs`. However, the variable `treatment2` does not appear to have a statistically significant impact on `bprs` in this model.
+
+## Random Intercept Model
+```{r}
+# Create a random intercept model
+BPRS_ref <- lmer(bprs ~ week + treatment + (1 | subject), data = BPRSL, REML = FALSE)
+
+# Print the summary of the model
+summary(BPRS_ref)
+
+```
+
+This linear mixed-effects model accounts for random intercepts at the subject level and provides estimates for fixed effects. The fixed effects include intercept, `week`, and `treatment2`.
+
+## Random Intercept and Random Slope Model
+```{r}
+# create a random intercept and random slope model
+BPRS_ref1 <- lmer(bprs ~ week + treatment + (week | subject), data = BPRSL, REML = FALSE)
+
+# print a summary of the model
+summary(BPRS_ref1)
+
+# perform an ANOVA test on the two models
+anova(BPRS_ref1, BPRS_ref)
+```
+
+- The random intercept and random slope model (`BPRS_ref1`) has a lower AIC and BIC compared to the random intercept model (`BPRS_ref`), indicating better model fit.
+
+- The ANOVA test shows that the random intercept and random slope model is statistically significant compared to the random intercept-only model (p-value = 0.02636).
+
+## Random Intercept and Random Slope Model with interaction
+```{r}
+# create a random intercept and random slope model with the interaction
+BPRS_ref2 <- lmer(bprs ~ week + treatment + week * treatment + (1 | subject), data = BPRSL, REML = FALSE)
+
+# print a summary of the model
+summary(BPRS_ref2)
+
+# perform an ANOVA test on the two models
+anova(BPRS_ref2, BPRS_ref1)
+```
+
+The ANOVA test indicates that the interaction model (`BPRS_ref2`) is not significantly different from the model without the interaction term (`BPRS_ref1`). The p-value is 0.03791, which is below the commonly used significance level of 0.05 but suggests a marginal significance.
+
+```{r}
+# Create a vector of the fitted values
+fitted <- fitted(BPRS_ref2)
+
+# Create a new column fitted to RATSL
+BPRSL <- BPRSL %>%
+  mutate(fitted = fitted)
+
+# draw the plot of BPRSL with the Fitted values of weight
+ggplot(BPRSL, aes(x = week, y = fitted, linetype = subject, color = treatment)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  theme(legend.position = "top") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+```
+
+The fitted values (`fitted`) and the `week` variable are showing a negative correlation, it suggests that the model is predicting decreasing values as the week variable increases.
